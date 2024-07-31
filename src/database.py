@@ -1,11 +1,14 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker,AsyncSession
-from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy import URL, create_engine, text
-from config import settings
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy import text, create_engine
+from src.config import settings
 import asyncio
 
 async_engine = create_async_engine(
     url=settings.DATABASE_URL_asyncpg,
+    echo=True
+)
+sync_engine = create_engine(
+    url=settings.DATABASE_URL_psycopg,
     echo=True
 )
 
