@@ -1,22 +1,60 @@
-from sqlalchemy import Table,Column, Integer, String, MetaData
+import datetime
+
+from sqlalchemy import text,Table,Column, Integer, String, MetaData
 from sqlalchemy import DateTime, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
+from database import Base
+
+class EmbeddingsOrm(Base):
+    __tablename__ = 'embeddings'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    embedding: Mapped[str]
+    hash: Mapped[int] = mapped_column(unique=True)
+    repo: Mapped[str | None]
+    date: Mapped[datetime.datetime] = mapped_column(server_default=text("timezone('utc',now())"))
+
+class CompairedPairOrm(Base):
+    __tablename__ = 'compaired_pair'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    result: Mapped[str]
+    hash_1: Mapped[int] = mapped_column(ForeignKey("embeddings.hash",ondelete="CASCADE"))
+    hash_2: Mapped[int] = mapped_column(ForeignKey("embeddings.hash",ondelete="CASCADE"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 metadata_object = MetaData()
 
-embeddings_table = Table(
-    'embeddings',
-    metadata_object,
-    Column('id',Integer, primary_key= True),
-    Column('embedding',String),
-    Column('hash',Integer,unique=True),
-    Column('repo', String),
-    Column('date',DateTime),
-    )
-
-model_results_table = Table(
-    'model_result',
-    metadata_object,
-    Column('id',Integer,primary_key=True),
-    Column('result', String),
-    Column('hash_1', Integer, ForeignKey('embeddings.hash')),
-    Column('hash_2', Integer, ForeignKey('embeddings.hash'))
-    )
+# embeddings_table = Table(
+#     'embeddings',
+#     metadata_object,
+#     Column('id',Integer, primary_key= True),
+#     Column('embedding',String),
+#     Column('hash',Integer,unique=True),
+#     Column('repo', String),
+#     Column('date',DateTime),
+#     )
+#
+# model_results_table = Table(
+#     'model_result',
+#     metadata_object,
+#     Column('id',Integer,primary_key=True),
+#     Column('result', String),
+#     Column('hash_1', Integer, ForeignKey('embeddings.hash')),
+#     Column('hash_2', Integer, ForeignKey('embeddings.hash'))
+#     )

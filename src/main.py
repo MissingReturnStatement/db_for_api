@@ -1,10 +1,14 @@
 import os
 import sys
+import asyncio
 sys.path.insert(1,os.path.join(sys.path[0],'..'))
-from queries.core import create_tables,drop_all_tables
+from queries.orm import async_insert_data,create_tables
 from database import sync_engine
 from models import metadata_object
 
-#create_tables()
-#print('helloS')
-#drop_all_tables(metadata=metadata_object,engine=sync_engine)
+
+create_tables()
+# metadata_object.reflect(bind=sync_engine)
+# tables=metadata_object.tables.keys()
+# for table in tables:
+#     print(table)
