@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57b833d7-e103-4c94-ac2f-bd6613db69f1" name="Changes" comment="Поменял структуру папок">
+    <list default="true" id="57b833d7-e103-4c94-ac2f-bd6613db69f1" name="Changes" comment="Переписал таблички на декларативный стиль">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/queries/core.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/queries/core.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/queries/orm.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/queries/orm.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -123,7 +120,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722407748633</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Переписал таблички на декларативный стиль">
+      <option name="closed" value="true" />
+      <created>1722917029528</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1722917029528</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -142,6 +147,7 @@
     <MESSAGE value="поднял вручную сервер с бдхой, написал тестовый запрос, всё сработало!" />
     <MESSAGE value="Добавлено создание и удаление таблиц" />
     <MESSAGE value="Поменял структуру папок" />
-    <option name="LAST_COMMIT_MESSAGE" value="Поменял структуру папок" />
+    <MESSAGE value="Переписал таблички на декларативный стиль" />
+    <option name="LAST_COMMIT_MESSAGE" value="Переписал таблички на декларативный стиль" />
   </component>
 </project>
