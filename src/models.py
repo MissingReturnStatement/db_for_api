@@ -3,7 +3,7 @@ import datetime
 from sqlalchemy import text,Table,Column, Integer, String, MetaData
 from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from database import Base
+from src.database import Base
 
 class EmbeddingsOrm(Base):
     __tablename__ = 'embeddings'
