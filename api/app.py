@@ -3,7 +3,7 @@ from src.queries.orm import SyncORM
 import datetime
 syncorm = SyncORM()
 url = "http://127.0.0.1:8000/embedding"
-data = {"text": "fuck you"}
+data = {"text": "test text"}
 
 response = requests.post(url, json=data)
 
