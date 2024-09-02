@@ -1,7 +1,9 @@
-from sqlalchemy import Integer, and_, cast, func, insert, inspect, or_, select, text,delete
+from sqlalchemy import Integer, and_, cast, func, insert, inspect, or_, select, text, delete
 from database import sync_engine, async_engine, session_factory, async_session_factory
 from models import metadata_object, EmbeddingsOrm, CompairedPairOrm, Base
 import datetime
+
+
 class SyncORM:
     @staticmethod
     def create_tables():
@@ -9,6 +11,7 @@ class SyncORM:
         Base.metadata.drop_all(sync_engine)
         Base.metadata.create_all(sync_engine)
         sync_engine.echo = True
+
     @staticmethod
     def select_all_from_embeddings():
         with session_factory() as session:
@@ -16,8 +19,9 @@ class SyncORM:
             results = session.execute(query).scalars().all()
             #print(f"{embeddings}")
             for embedding in results:
-                print(f"ID: {embedding.id}, Embedding: {embedding.embedding}, Hash: {embedding.hash}, Repo: {embedding.repo}, Date: {embedding.date}")
-
+                print(
+                    f"ID: {embedding.id}, Embedding: {embedding.embedding}, Hash: {embedding.hash}, Repo: {embedding.repo}, Date: {embedding.date}")
+                #TODO добавить экспорт в csv
 
     @staticmethod
     def select_by_id_from_embeddings(id: int):
@@ -35,10 +39,11 @@ class SyncORM:
                 return embedding_dict
             else:
                 return None
+
     @staticmethod
-    def select_by_hash_from_embeddings(hash: int):
+    def select_by_hash_from_embeddings(text_hash: int):
         with session_factory() as session:
-            statement = delete(EmbeddingsOrm).where(EmbeddingsOrm.hash == hash)
+            statement = select(EmbeddingsOrm).where(EmbeddingsOrm.hash == text_hash)
             result = session.execute(statement).scalar_one_or_none()
             if result:
                 embedding_dict = {
@@ -50,22 +55,27 @@ class SyncORM:
                 }
                 return embedding_dict
             else:
-                return None
+                return {'hash': -1111111}
 
     @staticmethod
     def insert_data_to_embeddings(embed_data: dict):
-       if embed_data['hash'] != SyncORM.select_by_hash()['hash']:
-           with session_factory() as session:
-            embed_obj = EmbeddingsOrm(
-                embedding=embed_data['embedding'],
-                hash=embed_data['hash'],
-                repo=embed_data.get('repo'),
-                date=embed_data.get('date', datetime.datetime.now())
-            )
-            session.add(embed_obj)
-            session.commit()
-       else:
-           return SyncORM.select_by_hash()['hash']
+        selected_hash = SyncORM.select_by_hash_from_embeddings(embed_data['hash'])['hash']
+        if embed_data['hash'] != selected_hash:
+            with session_factory() as session:
+                embed_obj = EmbeddingsOrm(
+                    embedding=embed_data['embedding'],
+                    hash=embed_data['hash'],
+                    repo=embed_data.get('repo'),
+                    date=embed_data.get('date', datetime.datetime.now())
+                )
+                session.add(embed_obj)
+                session.commit()
+        else:
+            try:
+                return SyncORM.select_by_hash_from_embeddings(embed_data['hash'])['hash']
+            except KeyError:
+                # Обработка, если 'hash' не найден в результате
+                return "Key 'hash' not found in table"
     @staticmethod
     def delete_by_id_from_embeddings(id: int):
         with session_factory() as session:
@@ -76,6 +86,7 @@ class SyncORM:
             else:
                 pass
                 #можно какое-то логирование добавить
+
     @staticmethod
     def delete_by_hash_from_embeddings(hash: int):
         with session_factory() as session:
@@ -85,4 +96,13 @@ class SyncORM:
                 session.commit()
             else:
                 pass
+
+    @staticmethod
+    def select_by_hash_from_compaired(hash: int):
+        
+        
+    @staticmethod
+    def insert_data_to_compaired(pair_data: dict):
+        pass
+
 
