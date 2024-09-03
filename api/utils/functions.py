@@ -12,8 +12,8 @@ def calculate_hash(text: str) -> int:
     return int((str(text_hash))[:7])
 
 
-def calculate_cosine_similarity(embed_1, embed_2: list[float]) -> torch.Tensor:
-    embed_tensor_1 = torch.Tensor(embed_1)
-    embed_tensor_2 = torch.Tensor(embed_2)
+def calculate_cosine_similarity(embed_1, embed_2: str) -> torch.Tensor:
+    embed_tensor_1 = torch.Tensor([float(num) for num in embed_1.strip('{}').split(',')])
+    embed_tensor_2 = torch.Tensor([float(num) for num in embed_2.strip('{}').split(',')])
     cosine_sim = F.cosine_similarity(embed_tensor_1, embed_tensor_2, dim=0)
     return cosine_sim

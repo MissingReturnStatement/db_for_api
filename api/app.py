@@ -1,6 +1,6 @@
 import requests
 from src.queries.orm import SyncORM
-from utils.functions import calculate_hash
+from utils.functions import calculate_hash,calculate_cosine_similarity
 import datetime
 syncorm = SyncORM()
 url = "http://127.0.0.1:8000/embedding"
@@ -12,7 +12,7 @@ response = requests.post(url, json=data)
 
 embedding_data = {}
 
-if response.status_code == 200:
+if response.status_code != 200:
     embedding = response.json()
     print('fuck')
     print(embedding)
@@ -22,5 +22,16 @@ if response.status_code == 200:
     syncorm.insert_data_to_embeddings(embedding_data)
 else:
     print("Error:", response.status_code, response.text)
-#syncorm.insert_test_data(str(embedding))
-syncorm.select_all_from_embeddings()
+#syncorm.select_all_from_embeddings()
+table_tuple_1 = syncorm.select_by_id_from_embeddings(4)
+table_tuple_2 = syncorm.select_by_id_from_embeddings(5)
+print(table_tuple_2['embedding'])
+result = calculate_cosine_similarity(table_tuple_1['embedding'],table_tuple_2['embedding'])
+print(result," COSINE SIMILARITY")
+compaired_dict = {
+    "result": result.item(),
+    "hash_1": table_tuple_1["hash"],
+    "hash_2": table_tuple_2["hash"]
+}
+syncorm.insert_data_to_compaired(compaired_dict)
+syncorm.select_all_from_compaired()

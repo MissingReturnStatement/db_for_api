@@ -1,6 +1,6 @@
 from sqlalchemy import Integer, and_, cast, func, insert, inspect, or_, select, text, delete
 from database import sync_engine, async_engine, session_factory, async_session_factory
-from models import metadata_object, EmbeddingsOrm, CompairedPairOrm, Base
+from models import EmbeddingsOrm, CompairedPairOrm, Base
 import datetime
 
 
@@ -98,11 +98,67 @@ class SyncORM:
                 pass
 
     @staticmethod
-    def select_by_hash_from_compaired(hash: int):
+    def select_by_hash_from_compaired(hash_dict: dict):
+        with session_factory() as session:
+            statement = select(CompairedPairOrm).where(
+            and_(CompairedPairOrm.hash_1 == hash_dict["hash_1"],
+                CompairedPairOrm.hash_2 == hash_dict["hash_2"])
+                )
+            result = session.execute(statement).scalar_one_or_none()
+            if result:
+                compaired_dict = {
+                    'id': result.id,
+                    'result': result.result,
+                    'hash_1': result.hash_1,
+                    'hash_2': result.hash_2
+                }
+                return compaired_dict
+            else:
+                return {'hash_1': -1111111, 'hash_2': -2222222}
+    @staticmethod
+    def select_by_id_from_compaired(id: int):
+        with session_factory() as session:
+            statement = select(CompairedPairOrm).where(CompairedPairOrm.id == id)
+            result = session.execute(statement).scalar_one_or_none()
+            if result:
+                compaired_dict = {
+                    'id': result.id,
+                    'result': result.result,
+                    'hash_1': result.hash_1,
+                    'hash_2': result.hash_2
+                }
+                return compaired_dict
+            else:
+                return None
         
         
     @staticmethod
     def insert_data_to_compaired(pair_data: dict):
-        pass
+        selected_pair_hash = SyncORM.select_by_hash_from_compaired({"hash_1": pair_data['hash_1'],"hash_2":pair_data['hash_2']})
+        if {"hash_1": pair_data['hash_1'],"hash_2":pair_data['hash_2']} != selected_pair_hash:
+            with session_factory() as session:
+                comapaired_obj = CompairedPairOrm(
+                    result=pair_data['result'],
+                    hash_1=pair_data['hash_1'],
+                    hash_2=pair_data['hash_2']
+                )
+                session.add(comapaired_obj)
+                session.commit()
+        else:
+            try:
+                return SyncORM.select_by_hash_from_embeddings(pair_data['hash'])['hash']
+            except KeyError:
+                # Обработка, если 'hash' не найден в результате
+                return None#"Key 'hash' not found in table"
+
+    @staticmethod
+    def select_all_from_compaired():
+        with session_factory() as session:
+            query = select(CompairedPairOrm)
+            results = session.execute(query).scalars().all()
+            # print(f"{embeddings}")
+            for compaired in results:
+                print(
+                    f"ID: {compaired.id}, Cosine_similarity: {compaired.result}, Hash_1: {compaired.hash_1}, Hash_2: {compaired.hash_2}")
 
 
